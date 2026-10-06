@@ -12,6 +12,15 @@
   --bg: #f4f6f8; --card: #fff; --text: #1b2430; --muted: #5b6675; --line: #dde3ea;
   --brand: #0e4d6b; --ok: #1e7a3c; --ok-bg: #e3f4e8; --warn: #8a5a00; --warn-bg: #fff3d6;
   --bad: #b3261e; --bad-bg: #fde7e5; --idle-bg: #eef1f4;
+  --btn-bg: #fff; --btn-text: #0e4d6b;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #11161c; --card: #1a2129; --text: #e6ebf0; --muted: #9aa6b4; --line: #2c3540;
+  --brand: #5cb8e0; --ok: #7fd69a; --ok-bg: #1c3a26; --warn: #f2c66d; --warn-bg: #3d3018;
+  --bad: #ff8a80; --bad-bg: #42201e; --idle-bg: #26303a;
+  --btn-bg: #1a2129; --btn-text: #5cb8e0;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body {
@@ -25,7 +34,8 @@ html[lang="bn"] body { font-family: "Noto Sans Bengali", system-ui, "Segoe UI", 
 .tagline { margin: 2px 0 0; color: var(--muted); }
 button { font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--brand); background: var(--brand); color: #fff; padding: 8px 16px; }
 button:focus-visible { outline: 3px solid #f2a900; outline-offset: 2px; }
-.lang-btn { background: #fff; color: var(--brand); font-weight: 600; white-space: nowrap; }
+.lang-btn { background: var(--btn-bg); color: var(--btn-text); border-color: var(--brand); font-weight: 600; white-space: nowrap; }
+.top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px 20px; margin-bottom: 16px; }
 .card h2 { margin: 0 0 12px; font-size: 1.15rem; }
 .muted { color: var(--muted); }

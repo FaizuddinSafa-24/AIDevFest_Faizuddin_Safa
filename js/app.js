@@ -16,6 +16,17 @@
   function saveLang(l) {
     try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
   }
+  const THEME_KEY = "tdc.theme";
+  function loadTheme() {
+    try {
+      const v = localStorage.getItem(THEME_KEY);
+      if (v === "light" || v === "dark") return v;
+    } catch (e) {}
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function saveTheme(v) {
+    try { localStorage.setItem(THEME_KEY, v); } catch (e) {}
+  }
   function makeT(lang) {
     return function t(key, vars) {
       let s = (T[lang] && T[lang][key]) || T.en[key] || key;
@@ -48,16 +59,22 @@
   }
 
   // ---------- components ----------
-  function Header({ t, lang, onToggle }) {
+  function Header({ t, lang, onToggle, theme, onTheme }) {
     return h("header", { className: "top" },
       h("div", { className: "brand" },
         h("h1", null, t("appName")),
         h("p", { className: "tagline" }, t("tagline"))
       ),
-      h("button", {
-        className: "lang-btn", onClick: onToggle,
-        "aria-label": t("langSwitchAria"), lang: lang === "en" ? "bn" : "en"
-      }, t("langSwitch"))
+      h("div", { className: "top-actions" },
+        h("button", {
+          className: "lang-btn", onClick: onTheme,
+          "aria-label": t("themeAria"), "aria-pressed": theme === "dark"
+        }, theme === "dark" ? "☀ " + t("themeToLight") : "☾ " + t("themeToDark")),
+        h("button", {
+          className: "lang-btn", onClick: onToggle,
+          "aria-label": t("langSwitchAria"), lang: lang === "en" ? "bn" : "en"
+        }, t("langSwitch"))
+      )
     );
   }
 
@@ -112,7 +129,11 @@
   function App() {
     const [lang, setLang] = useState(loadLang);
     const [state, setState] = useState({ status: "loading", data: null });
+    const [theme, setTheme] = useState(loadTheme);
     const t = makeT(lang);
+
+    useEffect(() => { document.documentElement.setAttribute("data-theme", theme); }, [theme]);
+    const toggleTheme = () => { const n = theme === "dark" ? "light" : "dark"; setTheme(n); saveTheme(n); };
 
     useEffect(() => {
       document.documentElement.lang = lang;
@@ -143,7 +164,7 @@
     );
 
     return h("div", { className: "app" },
-      h(Header, { t, lang, onToggle: toggle }),
+      h(Header, { t, lang, onToggle: toggle, theme, onTheme: toggleTheme }),
       h("main", null, body),
       h("footer", null, h("p", null, t("footer")), h("p", { className: "muted" }, t("sampleNote")))
     );
